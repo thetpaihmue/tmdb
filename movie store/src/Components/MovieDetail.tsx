@@ -22,31 +22,33 @@ const MovieDetail = () => {
     }
   }, [id]);
 
-  const backgroundImageStyle = {
-    backgroundImage: `url(https://www.themoviedb.org/t/p/original/${movieDetailData?.backdrop_path})`,
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-    color: "white",
-  };
-
   return (
-    <>
-      <div className="row m-3" style={backgroundImageStyle}>
-        <div className="col-lg-4 col-md-4 col-sm-6 mb-3">
-          <div className="text-center backdrop">
+    <div className="movie-detail-container">
+      {movieDetailData && (
+        <div
+          className="background-image"
+          style={{
+            backgroundImage: `url('https://www.themoviedb.org/t/p/original/${movieDetailData.backdrop_path}')`,
+          }}
+        ></div>
+      )}
+
+      <div className="content">
+        <div className="overlay-image">
+          {movieDetailData && (
             <img
-              className="d-inline poster"
-              src={`https://www.themoviedb.org/t/p/original/${movieDetailData?.backdrop_path}`}
+              src={`https://www.themoviedb.org/t/p/original/${movieDetailData.backdrop_path}`}
               alt="Movie Backdrop"
             />
-          </div>
+          )}
         </div>
-        <div className="col-lg-8 col-md-8 col-sm-6 mb-3">
-          <h1 style={{ color: "white" }}>{movieDetailData?.original_title}</h1>
-          <p style={{ color: "white" }}>{movieDetailData?.overview}</p>
+
+        <div className="text-content">
+          <h3>{movieDetailData?.original_title}</h3>
+          <p>{movieDetailData?.overview}</p>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

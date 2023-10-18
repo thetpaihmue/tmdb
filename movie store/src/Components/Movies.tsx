@@ -45,7 +45,10 @@ const Movies = () => {
 
   const card = moviesData.map((movie) => (
     <div className="col-lg-3 col-md-4 col-sm-6 mb-3" key={movie.id}>
-      <Card style={{ width: "auto" }} className="h-100">
+      <Card
+        style={{ width: "auto", backgroundColor: "#fff", borderRadius: "10%" }}
+        className="h-100 border-0"
+      >
         <div className="text-center" style={{ width: "100%", height: "100%" }}>
           <Card.Img
             variant="top"
@@ -54,19 +57,32 @@ const Movies = () => {
                 ? `https://www.themoviedb.org/t/p/original/${movie.backdrop_path}`
                 : placeholder
             }
+            className="img-cropped"
+            style={{ width: "240px", height: "200px" }}
           />
         </div>
-        <Card.Body>
-          <Card.Title>{movie.title}</Card.Title>
-        </Card.Body>
-        <Card.Footer className="bg-white">
+        <Card.Body className="d-flex flex-column justify-content-between">
+          <Card.Text
+            className="text-dark"
+            style={{
+              fontSize: "15px",
+              fontWeight: "bold",
+              textAlign: "center",
+            }}
+          >
+            {movie.title}
+          </Card.Text>
+
           <Button
-            style={{ backgroundColor: "#032541", border: "none" }}
+            style={{
+              backgroundColor: "#0d253f",
+              border: "none",
+            }}
             onClick={() => handleView(movie.id)}
           >
             View
           </Button>
-        </Card.Footer>
+        </Card.Body>
       </Card>
     </div>
   ));

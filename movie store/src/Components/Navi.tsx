@@ -17,13 +17,21 @@ const Navi = () => {
 
   return (
     <div>
-      <Navbar expand="lg" className="bg-body-tertiary">
+      <Navbar expand="lg" style={{ backgroundColor: "#0d253f" }}>
         <Container>
-          <Navbar.Brand to="/" as={Link}>
+          <Navbar.Brand
+            to="/"
+            as={Link}
+            style={{ color: " #90cea1", fontSize: "20px" }}
+          >
             Movie Store
           </Navbar.Brand>
           <Nav className="mr-auto">
-            <Nav.Link to="/movies" as={Link}>
+            <Nav.Link
+              to="/movies"
+              as={Link}
+              style={{ color: "#fff", fontSize: "15px", paddingTop: "11px" }}
+            >
               Movies
             </Nav.Link>
           </Nav>
