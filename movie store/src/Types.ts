@@ -74,9 +74,16 @@ type MovieListModel = {
 };
 
 type StateData = {
-  data: Array<MovieModel>;
+  data: MovieListModel["results"];
   isLoading: boolean;
   isError: boolean;
 };
 
+enum MovieActionEnum {
+  MOVIES_FETCH_INIT,
+  MOVIES_FETCH_SUCCESS,
+  MOVIES_FETCH_FAIL,
+}
+
 export type { MovieModel, MovieListModel, StateData };
+export { MovieActionEnum };

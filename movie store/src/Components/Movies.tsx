@@ -1,17 +1,24 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../Styles/Movies.css";
 import { useEffect, useState } from "react";
-import { Button, Card, Alert, Pagination } from "react-bootstrap";
+import { Button, Card, Alert, Pagination, Spinner } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
 import { popularMovies, searchMovie } from "../Services/Apis";
 import placeholder from "../assets/placeholder.jpg";
+import moviesReducer from "../Reducers/moviesReducer";
+import { useReducer } from "react";
+import { MovieActionEnum } from "../Types";
 
 const Movies = () => {
-  const [moviesData, setMoviesData] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const navigate = useNavigate();
   const location = useLocation();
 
+  const [moviesData, dispatchMovies] = useReducer(moviesReducer, {
+    data: [],
+    isLoading: false,
+    isError: false,
+  });
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -20,22 +27,30 @@ const Movies = () => {
   useEffect(() => {
     const searchQuery = new URLSearchParams(location.search).get("search");
     console.log("searchQuery", searchQuery);
+    dispatchMovies({ type: MovieActionEnum.MOVIES_FETCH_INIT });
+
     if (searchQuery) {
       searchMovie(searchQuery)
         .then((response) => {
-          setMoviesData(response.data.results);
+          dispatchMovies({
+            type: MovieActionEnum.MOVIES_FETCH_SUCCESS,
+            payload: response.data.results,
+          });
         })
-        .catch((error) => {
-          console.error("Error fetching movies:", error);
-        });
+        .catch(() =>
+          dispatchMovies({ type: MovieActionEnum.MOVIES_FETCH_FAIL })
+        );
     } else {
       popularMovies(currentPage.toString())
         .then((response) => {
-          setMoviesData(response.data.results);
+          dispatchMovies({
+            type: MovieActionEnum.MOVIES_FETCH_SUCCESS,
+            payload: response.data.results,
+          });
         })
-        .catch((error) => {
-          console.error("Error fetching popular movies:", error);
-        });
+        .catch(() =>
+          dispatchMovies({ type: MovieActionEnum.MOVIES_FETCH_FAIL })
+        );
     }
   }, [currentPage, location.search]);
 
@@ -43,7 +58,7 @@ const Movies = () => {
     navigate(`/movie/${id}`);
   };
 
-  const card = moviesData.map((movie) => (
+  const card = moviesData.data.map((movie) => (
     <div className="col-lg-3 col-md-4 col-sm-6 mb-3" key={movie.id}>
       <Card
         style={{ width: "auto", backgroundColor: "#fff", borderRadius: "10%" }}
@@ -89,14 +104,15 @@ const Movies = () => {
 
   return (
     <>
-      <div className="row m-3">
-        {moviesData.length ? (
-          card
-        ) : (
-          <Alert variant="danger">No movies found!</Alert>
-        )}
-      </div>
+      {moviesData.isError && <Alert variant="danger">Something worng</Alert>}
 
+      {moviesData.isLoading ? (
+        <div className="d-flex justify-content-center mt-5 mb-5">
+          <Spinner animation="border" variant="info" />
+        </div>
+      ) : (
+        <div className="row m-3">{card}</div>
+      )}
       <div className="d-flex justify-content-center">
         <Pagination>
           <Pagination.Prev
